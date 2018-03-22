@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UserAccount</title>
+{#     <link rel="icon" href="https://static.jianshukeji.com/highcharts/images/favicon.ico">#}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+    <script src="https://img.hcharts.cn/highcharts/modules/exporting.js"></script>
+    <script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+
+</head>
+<body>
+
+<form id="form1"  method="get">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+
+    <tr >
+      <td width="107">用户id：</td>
+      <td width="551">
+         <textarea rows="3" cols="40" id="userid" name="userid" value="('123')">
+
+        </textarea>
+      </td>
+
+    </tr>
+    <tr >
+      <td width="107">时间间隔（s）：</td>
+      <td width="351">
+          <input type="text" id="time_interval" name="time_interval" value="10">
+      </td>
+
+    </tr>
+    <tr >
+      <td width="107">总时间（s）：</td>
+      <td width="351">
+          <input type="text" id="total_time" name="total_time" value="100">
+      </td>
+
+    </tr>
+
+    <tr>
+      <td >
+          <button type="button" onclick="check()">开始</button>
+          <button type="button" onclick="stop()">停止</button>
+      </td>
+    </tr>
+  </table>
+</form>
+<div id="container" style="min-width:400px;height:400px"></div>
+<script type="text/javascript">
+var chart = null;
+var t=0;
+var i=0;
+//$(document).ready(function() {});
+function check(){
+  chart = new Highcharts.Chart({
+    chart: {
+      renderTo: 'container',
+      type: 'spline',
+      events: {
+        load: requestData  // 图表加载完毕后执行的回调函数
+      }
+    },
+	title: {
+		text: '用户金额查询'
+	},
+	xAxis: {
+		type: 'datetime',
+		tickPixelInterval: 150
+	},
+	yAxis: {
+		title: {
+			text: '总金额'
+		},
+		plotLines: [{
+			value: 0,
+			width: 1,
+			color: '#808080'
+		}]
+	},
+	 tooltip: {
+		formatter: function () {
+			return '<b>' + this.series.name + '</b><br/>' +
+				Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+				Highcharts.numberFormat(this.y, 2);
+		}
+	},
+	legend: {
+		enabled: false
+	},
+	exporting: {
+		enabled: false
+	},
+     series: [{
+		name: '实时数据',
+		data: (function () {
+			// generate an array of random data
+			var data = [],
+				time = (new Date()).getTime(),
+				i;
+			for (i = -1; i <= 0; i += 1) {
+				data.push({
+					x: time + i * 1000,
+					y: 0
+				});
+			}
+			return data;
+		}())
+	}]
+  });
+}
+
+ function requestData () {
+           var userid=$("#userid").val();
+            var time_interval=$("#time_interval").val();
+            var total_time=$("#total_time").val();
+            var data = {'userid':userid,'time_interval':time_interval};
+            $.ajax({
+				 url: "./user_account",
+				 type:"GET",
+				 data:data,
+				 success: function(point) {
+				     point=JSON.parse(point);
+				 var series = chart.series[0];
+				//shift = shifteries.data.length > 20; // 当数据点数量超过 20 个，则指定删除第一个点
+
+	      // 新增点操作
+	      //具体的参数详见：https://api.hcharts.cn/highcharts#Series.addPoint
+                     var x=time = (new Date()).getTime();
+				chart.series[0].addPoint([x,point[0]], true);
+
+	      // 一秒后继续调用本函数
+	    // t=setTimeout(requestData , time_interval*1000);
+                var count =  parseInt(total_time/time_interval);
+	     t=setTimeout(function () {
+	         if (i<count){
+	             requestData();
+	                i++
+	         }
+	         else{
+                  clearTimeout(t)
+             }
+
+         } , time_interval*1000);
+	     //console.log("这是"+t);
+         }
+	   })
+}
+
+function stop () {
+     clearTimeout(t);
+{#     console.log("这youyou是"+t);#}
+}
+</script>
+</body>
+</html>

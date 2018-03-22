@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>银行卡号生成器</title>
+    <style type="text/css">
+body{
+	width:90%;
+    max-width: 960px;
+	margin:auto;
+	padding:0px;
+	font-size:15px;
+	font-family:Georgia, "Times New Roman", Times, serif;
+}
+td{
+	padding:20px;
+	border-bottom:1px solid #ccc;
+	border-right:1px solid #ccc;
+}
+table{
+	border-left:1px solid #ccc;
+	border-top:1px solid #ccc;
+    width: 100%;
+}
+.textarea{
+	height:160px;
+    width: 80%;
+    margin: auto;
+	border:1px solid #ccc;
+	border-left:2px solid #999;
+	border-top:2px solid #999;
+	overflow-x:hidden;
+	overflow-y:auto;
+}
+.button{
+	padding:15px;
+	font-size:15px;
+}
+.title{
+	font-size:25px;
+	font-weight:bold;
+	color:#000000;
+	text-align:center;
+}
+</style>
+<script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript">
+function show_result() {
+    var s = $("#cardbin").find("option:selected").val();
+    var type = $("#banktype").find("option:selected").val();
+    var data={"carbin":s,"type":type};
+    $.ajax({
+        url:"./generatebankcard",
+        type:"GET",
+        data:data,
+        success:function (set) {
+            console.log(set);
+             $("#result").append("<span >"+set+" </span><br>");
+        }
+    })
+    
+}
+</script>
+</head>
+<body>
+<form id="Bankcard" method="get">
+    <table  width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td colspan="2" class="title">银行卡号生成器</td>
+        </tr>
+        <tr>
+            <td >银行名称:</td>
+            <td>
+                <select name="bankname">
+                    <option value="default">请选择</option>
+                    <option value="建设银行">建设银行</option>
+                </select>
+
+               <select name="banktype" id="banktype">
+                    <option value="default">请选择</option>
+                    <option value="1">借记卡</option>
+                    <option value="0">贷记卡</option>
+                </select>
+
+                <select name="cardbin" id="cardbin">
+                   <option value="default">请选择</option>
+                    <option value="436742">龙卡</option>
+
+               </select>
+            </td>
+        </tr>
+        <tr>
+            <td>生成条数:</td>
+            <td >
+                <select name="count" id="count">
+                    <option value="1">1</option>
+
+            </select>
+            </td>
+        </tr>
+         <td colspan="2" align="center">
+             <label>
+                <button type="button" onclick="show_result()">提交</button>
+             </label>
+         </td>
+    </tr>
+    </table>
+
+</form>
+
+<p> <span id="Result">Result:
+        &nbsp;<br>
+            <span id="result"></span>
+            <br>
+    </span>
+</p>
+</body>
+</html>

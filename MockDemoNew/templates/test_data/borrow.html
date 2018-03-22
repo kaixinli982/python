@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>发标的</title>
+    <style type="text/css">
+        body{
+            width:90%;
+            max-width: 960px;
+            margin:auto;
+            padding:0px;
+            font-size:15px;
+            font-family:Georgia, "Times New Roman", Times, serif;
+            }
+        .first{
+                font-weight:bold;
+                text-align: right
+
+            }
+td{
+	padding:10px;
+	border-bottom:1px solid #ccc;
+	border-right:1px solid #ccc;
+}
+table{
+	border-left:1px solid #ccc;
+	border-top:1px solid #ccc;
+    width:100%;
+}
+.textarea{
+	height:160px;
+    width: 80%;
+    margin: auto;
+	border:1px solid #ccc;
+	border-left:2px solid #999;
+	border-top:2px solid #999;
+	overflow-x:hidden;
+	overflow-y:auto;
+}
+
+.title{
+	font-size:25px;
+	font-weight:bold;
+	color:#000000;
+	text-align:center;
+}
+.button{
+    width:130px;
+    height: 100px;
+}
+    </style>
+<script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript">
+    function bid(s) {
+
+//      $(".second").empty();
+        console.log('jinlail');
+
+        var d_environment= $("#environment").find("option:selected").val();
+        var d_mobile= $("#mobile").val();
+        var d_loginpw=$("#loginpw").val();
+        var d_paypw=$("#paypw").val();
+        var d_borrowtype=$("#borrowtype").find("option:selected").val();
+        var d_timelimit=$("#timelimit").find("option:selected").val();
+        var d_repaytype=$("#repaytype").find("option:selected").val();
+        var d_account=$("#account").val();
+        var d_step=$("#step").val();
+        var d_checkstatus=$("#checkstatus").val();
+        var d_use=$("#use").val();
+        var d_user_id=$("#user_id").val();
+
+        var bid_data={"environment":d_environment,"mobile":d_mobile,"loginpw":d_loginpw,"paypw":d_paypw,"borrowtype":d_borrowtype,"timelimit":d_timelimit,"repaytype":d_repaytype,"step":d_step,"checkstatus":d_checkstatus,"account":d_account,"use":d_use,"user_id":d_user_id};
+        console.log(bid_data);
+        $.ajax({
+            url:"./borrow_auto",
+            type:"GET",
+            data:bid_data,
+            success:function(set){
+               console.log();
+//               set=JSON.parse(set);
+               console.log(set);
+               $("#result_data").append("<span >"+set+" </span><br>");
+
+            },
+            error:function(e){
+                console.log(e);
+            }
+        });
+    }
+</script>
+
+</head>
+<body>
+<form id="form2" type="get">
+    <table>
+       <th colspan="2">标的数据生成</th>
+        <tr>
+            <td class="first">环境：</td>
+            <td class="second">
+                <select name="environment" id="environment">
+                    <option value="stage">stage</option>
+                    <option value="test">test</option>
+                    <option value="uat">uat</option>
+                </select>
+            </td>
+        </tr>
+         <tr>
+            <td  class="first">手机号：</td><td class="second"><input type="text" id="mobile" value="15215612113"></td>
+        </tr>
+         <tr>
+            <td  class="first">登录密码：</td><td class="second"><input type="text" id="loginpw" value="a11111"></td>
+        </tr>
+         <tr>
+            <td  class="first">支付密码：</td><td class="second"><input type="text" id="paypw" value="a111111"></td>
+        </tr>
+
+        <tr>
+            <td  class="first">金额：</td><td class="second"><input type="text" id="account" value="50"></td>
+        </tr>
+
+        <tr>
+            <td  class="first">用途：</td><td class="second"><input type="text" id="use" value="7"></td>
+        </tr>
+
+        <tr>
+            <td  class="first">状态校验：</td><td class="second"><input type="text" id="checkstatus" value="5|5"></td>
+        </tr>
+
+        <tr>
+            <td  class="first">用户id：</td><td class="second"><input type="text" id="user_id" value="2214711"></td>
+        </tr>
+        <tr>
+            <td  class="first">标的类型：</td>
+            <td class="second">
+                <select name="borrowtype" id="borrowtype">
+                    <option value="9">新商贷</option>
+                    <option value="14">车贷</option>
+
+                </select>
+            </td>
+        </tr>
+         <tr>
+            <td  class="first">期限：</td>
+             <td class="second">
+                 <select name="timelimit" id="timelimit">
+                    <option value="1">1个月</option>
+                    <option value="3">3个月</option>
+                    <option value="6">6个月</option>
+                    <option value="12">12个月</option>
+                </select>
+             </td>
+        </tr>
+         <tr>
+            <td  class="first">还款方式：</td>
+             <td class="second">
+                <select name="repaytype" id="repaytype">
+                    <option value="1">等额本息</option>
+                    <option value="5">按月付息</option>
+
+                </select>
+             </td>
+        </tr>
+         <tr>
+            <td  class="first">步骤：</td><td class="second"><input type="text" id="step" value="0|5"></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center" style="padding: 0px"><label>
+            <button type="button" onclick="bid()">提交</button>
+            <button type="reset" value="重置" >重置</button>
+            </label></td>
+
+
+        </tr>
+    </table>
+</form>
+<div>
+    <p>
+        <span>结果展示：</span>
+        <br>
+        <span id="result_data"></span>
+    </p>
+</div>
+</body>
+</html>

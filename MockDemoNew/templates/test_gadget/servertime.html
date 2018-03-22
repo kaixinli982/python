@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Servertime</title>
+    <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+     function querytime(){
+         var options=$("#environment option:selected");
+         s=options.val();
+         console.log(s);
+         $("#result").empty();
+         var data={"environment":s};
+         $.ajax({
+             url:"./server_time",
+             type:"GET",
+             data:data,
+             success:function (set) {
+                 set=JSON.parse(set);
+                for (var i in set){
+                    console.log(i);
+                    console.log(set[i]);
+                      $("#result").append("<br>");
+                    $("#result").append("<option value='"+i+"'>"+i+"环境服务器时间如下:"+" </option>");
+                    $("#result").append("<br>");
+                    $("#result").append("<option value='"+set[i]+"'>"+set[i]+" </option>");
+                }
+
+             }
+         })
+
+     }
+
+    </script>
+</head>
+<body>
+    <div style="margin: 0 auto">
+        <div style="margin: 0 auto;text-align: center">环境：
+            <select name="environment" id="environment">
+                <option value="stage">stage</option>
+                <option value="test">test</option>
+                <option value="uat">uat</option>
+                <option value="dev">dev</option>
+
+            </select>
+            <button type="submit" onclick="querytime()">查询</button>
+        </div>
+        <div>
+            <span id="result" style="text-align: center"></span>
+        </div>
+    </div>
+</body>
+</html>

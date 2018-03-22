@@ -1,0 +1,247 @@
+<!DOCTYPE HTML>
+<meta charset="UTF-8">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>stress_testing</title>
+    <link rel="stylesheet" href="/static/css/loading/style.css" media="screen" type="text/css" />
+     <link rel="icon" href="https://static.jianshukeji.com/highcharts/images/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+    <script src="https://img.hcharts.cn/highcharts/modules/exporting.js"></script>
+    <script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+
+</head>
+<body>
+<h2>单接口压测</h2>
+
+<form action="./detail/" method="get">
+      <h4>接口请求参数</h4>
+     <tr>
+        <td class="field"> type <mark>*</mark></td>
+        <td><input id="type" type="text" name ="type" class="text" size="50" value="POST">POST</td><br>
+    </tr>
+     <tr>
+        <td class="field"> url <mark>*</mark></td>
+        <td><input id="url" type="text" name ="url" class="text" size="50" value="http://192.168.33.42:8080/Uip/uipinterface">http://192.168.33.42:8080/Uip/uipinterface</td><br>
+    </tr>
+     <tr>
+        <td class="field"> header <mark>*</mark></td>
+         <td><textarea id="header" name="header" cols ="80" rows="5">{'Content-Type': 'application/json'}</textarea></td><br>
+    </tr>
+     <tr>
+        <td class="field"> data <mark>*</mark></td>
+        <td><textarea id="data" name="data" cols ="80" rows="5">
+   {
+    "header":{
+        "orgCode":"XXD","merchantCode":"merchant",
+        "channelCode":"channel","channelUser":"channeluser","channelPwd":"123456",
+        "serviceCode":"APP_BASE_QueryAvailableProduct"
+    },
+    "body":{
+        "currentPage":1,"pageSize":20
+        }
+    }
+        </textarea>
+</td><br>
+    </tr>
+    <tr>
+        <td class="field"> interface_name <mark>*</mark></td>
+        <td><input id="name" type="text" name ="name" class="text" size="50" ></td><br>
+    </tr>
+    <tr>
+        <td class="field"> serialnum <mark>*</mark></td>
+        <td><input id="serialnum" type="text" name ="serialnum" class="text" size="50"></td><br>
+    </tr>
+    <h4>配置信息</h4>
+         <tr>
+        <td class="field"> serviceIp <mark>*</mark></td>
+        <td><input id="serviceIp" type="text" name ="serviceIp" class="text" size="50" value="['1', 'a2']">['1', "a2"]</td><br>
+    </tr>
+
+     <tr>
+        <td class="field"> thread_count <mark>*</mark></td>
+        <td><input id="thread_count" type="text" name ="thread_count" class="text" size="50" value="1">1</td><br>
+    </tr>
+     <tr>
+        <td class="field"> cycles <mark>*</mark></td>
+        <td><input id="cycles" type="text" name ="cycles" class="text" size="50" value="1">control=1,表示循环次数;control=0,表示运行时间</td><br>
+    </tr>
+    <tr>
+        <td class="field"> control_type:</td>
+        <td><input id="control_type" type="text" name ="control_type" class="text" size="50" value="1">默认为1-线程，0-时间</td><br>
+    </tr>
+    <tr>
+        <td class="field"> ramup_time <mark>*</mark></td>
+        <td><input id="ramup_time" type="text" name ="ramup_time" class="text" size="50" value="1">1</td><br>
+    </tr>
+    <tr>
+        <td class="field"> response_code <mark>*</mark></td>
+        <td><input id="response_code" type="text" name ="response_code" class="text" size="50" value="000000">000000</td><br>
+    </tr>
+    <tr>
+        <td class="field"> delay <mark>*</mark></td>
+        <td><input id="delay" type="text" name ="delay" class="text" size="50" value="0">0</td><br>
+    </tr>
+
+    <button id="submit" type="button" style="cursor: pointer;">提交</button>
+    <input type="reset" value="重置">
+    <span id="results"></span>
+</form>
+</div>
+  <div class="l-wrapper" id="loading" style="display: none;">
+    <svg viewBox="0 0 120 120" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <g id="circle" class="g-circles g-circles--v1">
+          <circle id="12" transform="translate(35, 16.698730) rotate(-30) translate(-35, -16.698730) " cx="35" cy="16.6987298" r="10"></circle>
+          <circle id="11" transform="translate(16.698730, 35) rotate(-60) translate(-16.698730, -35) " cx="16.6987298" cy="35" r="10"></circle>
+          <circle id="10" transform="translate(10, 60) rotate(-90) translate(-10, -60) " cx="10" cy="60" r="10"></circle>
+          <circle id="9" transform="translate(16.698730, 85) rotate(-120) translate(-16.698730, -85) " cx="16.6987298" cy="85" r="10"></circle>
+          <circle id="8" transform="translate(35, 103.301270) rotate(-150) translate(-35, -103.301270) " cx="35" cy="103.30127" r="10"></circle>
+          <circle id="7" cx="60" cy="110" r="10"></circle>
+          <circle id="6" transform="translate(85, 103.301270) rotate(-30) translate(-85, -103.301270) " cx="85" cy="103.30127" r="10"></circle>
+          <circle id="5" transform="translate(103.301270, 85) rotate(-60) translate(-103.301270, -85) " cx="103.30127" cy="85" r="10"></circle>
+          <circle id="4" transform="translate(110, 60) rotate(-90) translate(-110, -60) " cx="110" cy="60" r="10"></circle>
+          <circle id="3" transform="translate(103.301270, 35) rotate(-120) translate(-103.301270, -35) " cx="103.30127" cy="35" r="10"></circle>
+          <circle id="2" transform="translate(85, 16.698730) rotate(-150) translate(-85, -16.698730) " cx="85" cy="16.6987298" r="10"></circle>
+          <circle id="1" cx="60" cy="10" r="10"></circle>
+      </g>
+
+      <use xlink:href="#circle" class="use"/>
+  </svg>
+</div>
+<script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+
+ <h4>接口压力测试概况</h4>
+
+
+ <table border="1" cellpadding="10" cellspacing="0" style="margin-left:20px;text-align:center">
+ <tr>
+  <th>TOTAL</th>
+  <th>SUCCESS</th>
+  <th>FAILED</th>
+  <th>ERROR_RATE</th>
+  <th>AVG</th>
+  <th>MAX</th>
+  <th>TPS</th>
+ </tr>
+ <tr id="result_data">
+  <td id="total">-</td>
+  <td>-</td>
+  <td>-</td>
+  <td>-</td>
+  <td>-</td>
+  <td>-</td>
+  <td>-</td>
+ </tr>
+ </table>
+
+  <h4>CPU-MEM</h4>
+{#<img src="../../static/png/1.png">#}
+<div id="container" style="min-width:400px;height:800px"></div>
+
+<script>
+    $(document).ready(function(){
+      $("#submit").click(function(){
+          $('#loading').css("display","block");
+            $('#submit').attr("disabled","disabled");
+        var type = $("#type").val();
+        var url = $("#url").val();
+        var header = $("#header").val();
+        var data = $("#data").val();
+        var thread_count = $("#thread_count").val();
+        var cycles = $("#cycles").val();
+        var control_type = $("#control_type").val();
+        var ramup_time = $("#ramup_time").val();
+        var response_code = $("#response_code").val();
+        var delay = $("#delay").val();
+        var name = $("#name").val();
+        var serialnum = $("#serialnum").val();
+        var serviceIp=$("#serviceIp").val();
+
+        var data = {'type':type,'url':url,'header':header,'data':data,'thread_count':thread_count,'cycles':cycles,'control_type':control_type, 'ramup_time':ramup_time,'response_code':response_code,'delay':delay,'name':name,'serialnum':serialnum,'serviceIp':serviceIp};
+        $.ajax({
+            url:"./detail/",
+            data:data,
+            type:"GET",
+            success:function(result){
+                $('#loading').css("display","none");
+                $('#submit').removeAttr("disabled","disabled");
+                var data = JSON.parse(result);
+                console.log(data.interface);
+                console.log(data.cpu);
+                var tds = result_data.getElementsByTagName("td");
+                tds[0].innerText = data.interface.total_request;
+                tds[1].innerText = data.interface.pass_count;
+                tds[2].innerText = data.interface.failed_count;
+                tds[3].innerText = data.interface.failed_rate;
+                tds[4].innerText = data.interface.avg_time;
+                tds[5].innerText = data.interface.max_time;
+                tds[6].innerText = data.interface.tps;
+
+    chart = new Highcharts.Chart('container', {
+    title: {
+        text: 'Server CPU mem',
+        style:{fontSize:'32px'},
+        x: -20
+    },
+    chart: {
+    type:'spline'
+},
+    xAxis: {
+        categories: data.Time,
+        tickInterval: 20 ,// 坐标轴刻度间隔为一星期
+        labels:{
+            style:{fontSize : '20px'},
+            autoRotation: [-10, -20, -30, -40, -50, -60, -70, -80, -90]
+        }
+    },
+     dateTimeLabelFormats:{
+        millisecond: '%H:%M:%S.%L'
+     },
+    yAxis: {
+        title: {
+            text: '%',
+            style:{'fontSize':'24px',
+                    color:'#666666'
+            }
+        },
+        labels:{
+            style:{fontSize : '20px'}
+        },
+        plotLines: [{
+            value: 0,
+            width: 1,
+            color: '#808080'
+        }]
+    },
+    tooltip: {
+        valueSuffix: '%'
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle',
+        borderWidth: 0,
+        itemStyle:{'fontSize':'24px'}
+    },
+    series: [{
+        name: 'cpu',
+        data: data.cpu,
+        color:'red',
+        fontSize : '22px'
+    },  {
+        name: 'mem',
+        data: data.mem,
+        color:'blue'
+    }]
+
+});
+
+		    }
+        });
+      });
+    });
+</script>
+
+</body>
+</html>
